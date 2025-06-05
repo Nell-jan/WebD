@@ -35,5 +35,4 @@ class DatabaseSeeder extends Seeder
             'name' => 'Zee',
             'age' => 22,
         ]);
-    }
 }
