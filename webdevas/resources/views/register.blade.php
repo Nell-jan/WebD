@@ -1,51 +1,57 @@
-<!-- filepath: /Users/nell/Desktop/webdevas/resources/views/register.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+@extends('base')
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-header text-center">
-                        <h2>Register</h2>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">//+
+@section('title', 'Register')
 
-                            @csrf
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password_confirmation">Confirm Password</label>
-                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <a href="{{ route('login') }}">Already have an account? Login</a>
-                    </div>
-                </div>
-            </div>
+@section('content')
+<div class="d-flex justify-content-center align-items-center vh-100" style="background-color: #f8f9fa";>
+    <div class="card shadow-lg p-4" style="width: 400px;">
+        <h3 class="text-center mb-4">Register</h3>
+
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </div>
+        @endif
 
-</body>
-</html>
+        @if(session('fail'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('fail') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
+        <form method="POST" action="{{ route('auth.userRegister') }}">
+            @csrf
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter name">
+                @error('name')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email">
+                @error('email')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                @error('password')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <a href="{{ route('auth.index') }}" class="d-block text-center mt-3">Go back to login</a>
+
+
+    </div>
+</div>
+@endsection
