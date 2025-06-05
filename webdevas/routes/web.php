@@ -1,20 +1,24 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Middleware\AuthCheck;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
 
-Route::get('/', [StudentsController::class, 'myView'])->name('std.myView');
-Route::post('/add-new', [StudentsController::class, 'addNewStudent'])->name('std.addNewStudent');
-Route::post('/students/update/{id}', [StudentsController::class, 'updateStudent'])->name('std.updateStudent');
-Route::delete('/students/delete/{id}', [StudentsController::class, 'deleteStudent'])->name('std.deleteStudent');
+Route::get('/', function () {
+    return redirect()->route('auth.index');
+});
 
-Route::middleware(['web'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
+// Auth 
+Route::get('/login', [AuthController::class, 'indexLogin'])->name('auth.index');
+Route::post('/user-login', [AuthController::class, 'userLogin'])->name('auth.login');
+
+Route::get('/register', [AuthController::class, 'indexRegister'])->name('auth.register');
+Route::post('/user-register', [AuthController::class, 'userRegister'])->name('auth.userRegister');
+
+Route::middleware([AuthCheck::class])->group(function () {
+    Route::get('/students', [StudentsController::class, 'index'])->name('std.index');
+    Route::post('/create-student', [StudentsController::class, 'newStudent'])->name('std.create');
+
+    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
